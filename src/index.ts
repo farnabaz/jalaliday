@@ -1,3 +1,6 @@
-export { default } from './plugin'
+/**
+ * @deprecated Use `jalaliday/dayjs` instead.
+ */
+export { default } from './dayjs/plugin'
 
-export type * from './types.d'
+export type * from './dayjs/types'

@@ -19,7 +19,8 @@
   ],
   "exports": {
     ".": "./dist/index.mjs",
-    "./dayjs": "./dist/dayjs.mjs"
+    "./dayjs": "./dist/dayjs/index.mjs",
+    "./intl": "./dist/intl/index.mjs"
   },
   "main": "dist/index.mjs",
   "scripts": {
@@ -33,14 +34,14 @@
   "size-limit": [
     {
       "limit": "2.99 KB",
-      "path": "dist/index.mjs",
+      "path": "dist/dayjs/index.mjs",
       "ignore": [
         "dayjs"
       ]
     },
     {
       "limit": "2.99 KB",
-      "path": "dist/plugin.mjs",
+      "path": "dist/dayjs/plugin.mjs",
       "ignore": [
         "dayjs"
       ]

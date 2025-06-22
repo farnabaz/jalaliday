@@ -2,17 +2,14 @@
 [![npm (scoped with tag)](https://img.shields.io/npm/v/jalaliday/latest.svg?style=flat-square)](https://npmjs.com/package/jalaliday)
 [![npm](https://img.shields.io/npm/dt/jalaliday.svg?style=flat-square)](https://npmjs.com/package/jalaliday)
 
-Persian (Jalali, Khorshidi) Plugin for [Day.js](https://github.com/iamkun/dayjs), Jalaliday add multi-calendar functionality to Day.js core regardless for of locale, so we can have Gregorian calendar is Persian locale of Jalali calendar in English locale  
+Jalaliday is collection of Date utilities for Persian (Jalali, Khorshidi) and Gregorian (UTC) calendars.
+
+- `jalaliday/dayjs` is Persian (Jalali, Khorshidi) Plugin for [Day.js](https://github.com/iamkun/dayjs), Jalaliday add multi-calendar functionality to Day.js core regardless for of locale, so we can have Gregorian calendar is Persian locale of Jalali calendar in English locale  
 Unlike moment and becuase of immutablity of dayjs, there is no need for formats like `jYYYY` or `jMM`, in Jalaliday all formats are same and standard
+- `jalaliday/intl` is collection of utilities built on top of [`Intl.DateTimeFormat` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl).
 
 
 [📖 **Release Notes**](./CHANGELOG.md)
-
-> [!NOTE]
-> This package is improved version of [jalaliday](https://github.com/alibaba-aero/jalaliday) package which I 
-> created 7 years ago in @alibaba-aero. I didn't have access to maintain it since then. So I decided to fork it and
-> improve it.
-> 
 
 ## Installation
 NPM
@@ -24,19 +21,12 @@ YARN
 yarn add jalaliday
 ```
 
-## Usage
+## Dayjs Usage
 ```javascript
 import dayjs from 'dayjs'
-import jalaliday from 'jalaliday'
+import jalaliday from 'jalaliday/dayjs'
 
 dayjs.extend(jalaliday)
-```
-
-OR
-
-You can import dayjs from `jalaliday/dayjs` and it will be extended with jalaliday plugin
-```javascript
-import dayjs from 'jalaliday/dayjs'
 ```
 
 ### Changing calendar
@@ -71,7 +61,10 @@ dayjs().calendar('gregory').locale('fa').format('DD MMMM YYYY') // '04 سپتا�
 
 ### API
 All Api operations of Jalaliday is same as Dayjs itself but calendar based, for more information checkout [Dayjs API](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md)
-For a glance:
+
+<details>
+<summary>Dayjs API in a glance</summary>
+
 - [API Reference](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md#api-reference)
   - [Parsing](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md#parsing)
     - [Constructor `dayjs(existing?: string | number | Date | Dayjs)`](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md#constructor-dayjsexisting-string--number--date--dayjs)
@@ -118,3 +111,18 @@ For a glance:
     - [IsLeapYear](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md#isleapyear)
     - [WeekOfYear](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md#weekofyear)
     - [IsBetween](https://github.com/iamkun/dayjs/blob/master/docs/en/API-reference.md#isbetween)
+
+</details>
+
+## Intl Usage
+
+```javascript
+import { formatDate } from 'jalaliday/intl'
+
+const date = new Date('2025-06-22T10:20:30.000Z')
+
+formatDate(date) // '1404/04/01'
+formatDate(date, 'YYYY/MM/DD') // '1404/04/01'
+formatDate(date, 'YYYY/MM/DD HH:mm:ss') // '1404/04/01 13:50:30'
+formatDate(date, 'YYYY/MM/DD HH:mm:ss') // '1404/04/01 13:50:30'
+```

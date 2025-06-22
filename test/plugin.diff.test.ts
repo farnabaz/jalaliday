@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import jalali from '../src/plugin'
+import jalali from '../src/dayjs/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')

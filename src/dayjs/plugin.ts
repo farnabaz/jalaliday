@@ -1,8 +1,8 @@
 import type { PluginFunc } from 'dayjs'
 
 import fa from 'dayjs/locale/fa'
-import jdate from './calendar'
-import * as C from './constant'
+import jdate from '../calendar'
+import * as C from '../constant'
 
 const plugin: PluginFunc = (o, Dayjs, dayjs) => {
   const proto = Dayjs.prototype

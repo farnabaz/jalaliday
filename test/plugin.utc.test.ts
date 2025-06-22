@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { expect, it } from 'vitest'
-import jalali from '../src/plugin'
+import jalali from '../src/dayjs/plugin'
 
 dayjs.extend(utc)
 dayjs.extend(jalali)

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import weekday from 'dayjs/plugin/weekday'
 import { expect, it } from 'vitest'
-import jalali from '../src/plugin'
+import jalali from '../src/dayjs/plugin'
 
 dayjs.extend(weekday)
 dayjs.extend(jalali)

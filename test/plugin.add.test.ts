@@ -1,10 +1,13 @@
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import jalali from '../src/plugin'
+import jalali from '../src/dayjs/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')
+
+type Dayjs = dayjs.Dayjs
+
 describe('plugin.add', () => {
   beforeEach(() => {
     MockDate.set(new Date())
@@ -63,8 +66,8 @@ describe('plugin.add', () => {
   })
 
   describe('add 100 days', () => {
-    let a = null
-    let b = null
+    let a: Dayjs
+    let b: Dayjs
 
     beforeEach(() => {
       a = dayjs('1397/06/01', { jalali: true })
@@ -77,8 +80,8 @@ describe('plugin.add', () => {
   })
 
   describe('add 1 month in shahrivar 31th', () => {
-    let a = null
-    let b = null
+    let a: Dayjs
+    let b: Dayjs
 
     beforeEach(() => {
       a = dayjs('1397/06/31', { jalali: true })

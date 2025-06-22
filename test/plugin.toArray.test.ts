@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import toArray from 'dayjs/plugin/toArray'
 import MockDate from 'mockdate'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import jalali from '../src/plugin'
+import jalali from '../src/dayjs/plugin'
 
 describe('plugin.toArray', () => {
   dayjs.extend(toArray)
