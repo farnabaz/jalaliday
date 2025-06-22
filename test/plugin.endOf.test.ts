@@ -1,6 +1,7 @@
-import MockDate from 'mockdate'
 import dayjs from 'dayjs'
-import jalali from '../src'
+import MockDate from 'mockdate'
+import { afterEach, beforeEach, expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')
@@ -45,7 +46,6 @@ it('endOfMonth - months with 29 days - leap year', () => {
   expect(date2.date()).toEqual(30)
 })
 
-
 it('endOfYear', () => {
   const date = dayjs('1397/06/13', { jalali: true })
   const date2 = date.endOf('year')
@@ -61,7 +61,6 @@ it('endOfYear - leap year', () => {
   expect(date2.month()).toEqual(11)
   expect(date2.date()).toEqual(30)
 })
-
 
 it('endOfWeek', () => {
   const date = dayjs('1397/06/13', { jalali: true })

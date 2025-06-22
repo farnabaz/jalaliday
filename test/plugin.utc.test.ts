@@ -1,11 +1,12 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import jalali from '../src'
+import { expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(utc)
 dayjs.extend(jalali)
 
-it('Should respect utc', () => {
+it('should respect utc', () => {
   const date = dayjs.utc().calendar('jalali')
 
   expect(date.isUTC()).toBe(true)

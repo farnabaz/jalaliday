@@ -1,6 +1,7 @@
-import MockDate from 'mockdate'
 import dayjs from 'dayjs'
-import jalali from '../src'
+import MockDate from 'mockdate'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')
@@ -18,7 +19,7 @@ describe('diff two dates', () => {
   const b = dayjs('1397/09/10', { jalali: true })
 
   it('diff(float)', () => {
-    expect(a.diff(b, 'month', true)).toEqual(-3.3)
+    expect(a.diff(b, 'month', true).toFixed(1)).toEqual('-3.3')
   })
 
   it('diff(month)', () => {

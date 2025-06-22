@@ -1,6 +1,7 @@
-import MockDate from 'mockdate'
 import dayjs from 'dayjs'
-import jalali from '../src'
+import MockDate from 'mockdate'
+import { afterEach, beforeEach, expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')
@@ -13,7 +14,7 @@ afterEach(() => {
   MockDate.reset()
 })
 
-test('subtract 1 ms', () => {
+it('subtract 1 ms', () => {
   const date = dayjs('1397/06/13', { jalali: true })
   const date2 = date.subtract(1, 'ms')
   expect(date2.year()).toEqual(date.year())
@@ -22,7 +23,7 @@ test('subtract 1 ms', () => {
   expect(date2.$ms).toEqual(999)
 })
 
-test('subtract 1 day in the middle of the month', () => {
+it('subtract 1 day in the middle of the month', () => {
   const date = dayjs('1397/06/13', { jalali: true })
   const date2 = date.subtract(1, 'day')
   expect(date2.year()).toEqual(date.year())
@@ -30,7 +31,7 @@ test('subtract 1 day in the middle of the month', () => {
   expect(date2.date()).toEqual(date.date() - 1)
 })
 
-test('subtract 1 day in the beginning of the month', () => {
+it('subtract 1 day in the beginning of the month', () => {
   const date = dayjs('1397/06/01', { jalali: true })
   const date2 = date.subtract(1, 'day')
   expect(date2.year()).toEqual(date.year())
@@ -38,7 +39,7 @@ test('subtract 1 day in the beginning of the month', () => {
   expect(date2.date()).toEqual(31)
 })
 
-test('subtract 1 month in the middle of the year', () => {
+it('subtract 1 month in the middle of the year', () => {
   const date = dayjs('1397/06/13', { jalali: true })
   const date2 = date.subtract(1, 'month')
   expect(date2.year()).toEqual(date.year())
@@ -46,8 +47,7 @@ test('subtract 1 month in the middle of the year', () => {
   expect(date2.date()).toEqual(date.date())
 })
 
-
-test('subtract 18 months', () => {
+it('subtract 18 months', () => {
   const date = dayjs('1397/06/13', { jalali: true })
   const date2 = date.subtract(18, 'month')
   expect(date2.year()).toEqual(1395)
@@ -55,7 +55,7 @@ test('subtract 18 months', () => {
   expect(date2.date()).toEqual(date.date())
 })
 
-test('subtract 17 months', () => {
+it('subtract 17 months', () => {
   const date = dayjs('1397/06/13', { jalali: true })
   const date2 = date.subtract(17, 'month')
   expect(date2.year()).toEqual(1396)
@@ -63,7 +63,7 @@ test('subtract 17 months', () => {
   expect(date2.date()).toEqual(date.date())
 })
 
-test('subtract 1 month in the beginning of the year', () => {
+it('subtract 1 month in the beginning of the year', () => {
   const date = dayjs('1397/01/13', { jalali: true })
   const date2 = date.subtract(1, 'month')
   expect(date2.year()).toEqual(date.year() - 1)
@@ -71,7 +71,7 @@ test('subtract 1 month in the beginning of the year', () => {
   expect(date2.date()).toEqual(date.date())
 })
 
-test('subtract 1 month in the beginning of the year', () => {
+it('subtract 1 month in the beginning of the year 2', () => {
   const date = dayjs('1397/01/01', { jalali: true })
   const date2 = date.subtract(11, 'month')
   expect(date2.year()).toEqual(date.year() - 1)
@@ -79,7 +79,7 @@ test('subtract 1 month in the beginning of the year', () => {
   expect(date2.date()).toEqual(date.date())
 })
 
-test('subtract 1 year', () => {
+it('subtract 1 year', () => {
   const date = dayjs('1397/01/13', { jalali: true })
   const date2 = date.subtract(1, 'year')
   expect(date2.year()).toEqual(date.year() - 1)

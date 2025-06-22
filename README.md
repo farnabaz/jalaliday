@@ -1,17 +1,18 @@
 # Jalaliday
 [![npm (scoped with tag)](https://img.shields.io/npm/v/jalaliday/latest.svg?style=flat-square)](https://npmjs.com/package/jalaliday)
 [![npm](https://img.shields.io/npm/dt/jalaliday.svg?style=flat-square)](https://npmjs.com/package/jalaliday)
-[![CircleCI](https://img.shields.io/circleci/project/github/alibaba-aero/jalaliday.svg?style=flat-square)](https://circleci.com/gh/)
-[![Codecov](https://img.shields.io/codecov/c/github/alibaba-aero/jalaliday.svg?style=flat-square)](https://codecov.io/gh/)
-[![Dependencies](https://david-dm.org/jalaliday/status.svg?style=flat-square)](https://david-dm.org/)
-[![js-standard-style](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com)
 
 Persian (Jalali, Khorshidi) Plugin for [Day.js](https://github.com/iamkun/dayjs), Jalaliday add multi-calendar functionality to Day.js core regardless for of locale, so we can have Gregorian calendar is Persian locale of Jalali calendar in English locale  
 Unlike moment and becuase of immutablity of dayjs, there is no need for formats like `jYYYY` or `jMM`, in Jalaliday all formats are same and standard
 
-> 
 
 [📖 **Release Notes**](./CHANGELOG.md)
+
+> [!NOTE]
+> This package is improved version of [jalaliday](https://github.com/alibaba-aero/jalaliday) package which I 
+> created 7 years ago in @alibaba-aero. I didn't have access to maintain it since then. So I decided to fork it and
+> improve it.
+> 
 
 ## Installation
 NPM
@@ -29,6 +30,13 @@ import dayjs from 'dayjs'
 import jalaliday from 'jalaliday'
 
 dayjs.extend(jalaliday)
+```
+
+OR
+
+You can import dayjs from `jalaliday/dayjs` and it will be extended with jalaliday plugin
+```javascript
+import dayjs from 'jalaliday/dayjs'
 ```
 
 ### Changing calendar

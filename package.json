@@ -1,30 +1,46 @@
 {
   "name": "jalaliday",
   "version": "2.3.0",
+  "packageManager": "pnpm@10.11.1",
   "description": "Persian (Jalali, Khorshidi) Plugin for Day.js",
-  "main": "dist/jalaliday.cjs.min.js",
-  "web": "dist/jalaliday.umd.min.js",
-  "module": "dist/jalaliday.esm.js",
-  "jsnext:main": "dist/jalaliday.esm.js",
+  "author": "Ahad Birang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/farnabaz/jalaliday.git"
+  },
+  "keywords": [
+    "dayjs",
+    "date",
+    "time",
+    "immutable",
+    "moment",
+    "jalali"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./dayjs": "./dist/dayjs.mjs"
+  },
+  "main": "dist/index.mjs",
   "scripts": {
-    "test": "yarn build && jest",
+    "test": "vitest run",
     "lint": "eslint src/* test/*",
-    "build": "bili && yarn size",
-    "release": "standard-version $* && git push --follow-tags && npm publish",
-    "prepublishOnly": "npm run build",
+    "prepack": "obuild && pnpm size",
+    "release": "release-it",
+    "verify": "pnpm prepack && pnpm lint && pnpm test",
     "size": "size-limit"
   },
   "size-limit": [
     {
       "limit": "2.99 KB",
-      "path": "dist/jalaliday.umd.min.js",
+      "path": "dist/index.mjs",
       "ignore": [
         "dayjs"
       ]
     },
     {
       "limit": "2.99 KB",
-      "path": "dist/jalaliday.cjs.min.js",
+      "path": "dist/plugin.mjs",
       "ignore": [
         "dayjs"
       ]
@@ -48,35 +64,21 @@
       "^.+\\.js$": "<rootDir>/jest.transform.js"
     }
   },
-  "keywords": [
-    "dayjs",
-    "date",
-    "time",
-    "immutable",
-    "moment",
-    "jalali"
-  ],
-  "author": "Ahad Birang",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alibaba-aero/jalaliday.git"
+  "peerDependencies": {
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.5.5",
-    "@size-limit/preset-small-lib": "^2.1.1",
-    "bili": "^4.8.1",
-    "codecov": "^3.5.0",
-    "dayjs": "^1.8.19",
-    "eslint": "^6.2.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jest": "^22.15.2",
-    "gzip-size-cli": "^3.0.0",
-    "jest": "^24.9.0",
-    "mockdate": "^2.0.5",
+    "@antfu/eslint-config": "^4.15.0",
+    "@babel/preset-env": "^7.27.2",
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "codecov": "^3.8.3",
+    "eslint": "^9.29.0",
+    "gzip-size-cli": "^5.1.0",
+    "mockdate": "^3.0.5",
+    "obuild": "^0.2.1",
     "pre-commit": "^1.2.2",
-    "size-limit": "^2.1.1",
-    "standard-version": "7.0.0"
+    "release-it": "^19.0.3",
+    "size-limit": "^11.2.0",
+    "vitest": "^3.2.2"
   }
 }

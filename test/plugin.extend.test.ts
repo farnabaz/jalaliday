@@ -1,6 +1,7 @@
-import MockDate from 'mockdate'
 import dayjs from 'dayjs'
-import jalali from '../src'
+import MockDate from 'mockdate'
+import { afterEach, beforeEach, expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 beforeEach(() => {
   MockDate.set(new Date())
@@ -16,7 +17,6 @@ it('same functionality after extend', () => {
   const originalYesterday = dayjs().subtract(1, 'day')
   // extend
   dayjs.extend(jalali)
-
 
   const extendedToday = dayjs()
   const extendedTomorrow = dayjs().add(1, 'day')

@@ -1,6 +1,7 @@
-import MockDate from 'mockdate'
 import dayjs from 'dayjs'
-import jalali from '../src'
+import MockDate from 'mockdate'
+import { afterEach, beforeEach, expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')
@@ -13,13 +14,13 @@ afterEach(() => {
   MockDate.reset()
 })
 
-it('Extend dayjs', () => {
+it('extend dayjs', () => {
   expect(dayjs.$C).toBeDefined()
   expect(dayjs.$C).toEqual('jalali')
   expect(dayjs().$jy).toBeDefined()
 })
 
-it('Setting calendar converts date', () => {
+it('setting calendar converts date', () => {
   const date = dayjs('1397/06/13', { jalali: true }).calendar('gregory')
   expect(date.$y).toEqual(2018)
   expect(date.$M).toEqual(8)
@@ -31,7 +32,7 @@ it('Setting calendar converts date', () => {
   expect(date2.$jD).toEqual(13)
 })
 
-test('keep instance calendar on manipulation', () => {
+it('keep instance calendar on manipulation', () => {
   const date = dayjs().calendar('jalali')
   expect(date.add(1, 'month').isJalali()).toEqual(true)
   expect(dayjs(date).startOf('month').$C).toEqual('jalali')

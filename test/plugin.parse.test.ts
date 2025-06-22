@@ -1,6 +1,7 @@
-import MockDate from 'mockdate'
 import dayjs from 'dayjs'
-import jalali from '../src'
+import MockDate from 'mockdate'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(jalali)
 dayjs.calendar('jalali')
@@ -13,11 +14,11 @@ afterEach(() => {
   MockDate.reset()
 })
 
-describe('Parse Valid String', () => {
+describe('parse Valid String', () => {
   // 2018-09-04
   const date = dayjs('1397/06/13', { jalali: true })
 
-  test('valid jalali date', () => {
+  it('valid jalali date', () => {
     expect(date.year()).toEqual(1397)
     expect(date.month()).toEqual(5)
     expect(date.date()).toEqual(13)
@@ -25,7 +26,7 @@ describe('Parse Valid String', () => {
 
   const date2 = dayjs('1397/06', { jalali: true })
 
-  test('valid jalali date without day', () => {
+  it('valid jalali date without day', () => {
     expect(date2.year()).toEqual(1397)
     expect(date2.month()).toEqual(5)
     expect(date2.date()).toEqual(1)
@@ -33,14 +34,14 @@ describe('Parse Valid String', () => {
 
   const gregory = date.calendar('gregory')
 
-  test('convert to gregory', () => {
+  it('convert to gregory', () => {
     expect(gregory.year()).toEqual(2018)
     expect(gregory.month()).toEqual(8)
     expect(gregory.date()).toEqual(4)
   })
 })
 
-it('Parse invalid String', () => {
+it('parse invalid String', () => {
   const date = dayjs('', { jalali: true })
   expect(date.year()).toBeNaN()
 

@@ -1,18 +1,19 @@
-import fa from 'dayjs/esm/locale/fa'
+import type { PluginFunc } from 'dayjs'
 
+import fa from 'dayjs/locale/fa'
 import jdate from './calendar'
 import * as C from './constant'
 
-export default (o, Dayjs, dayjs) => {
+const plugin: PluginFunc = (o, Dayjs, dayjs) => {
   const proto = Dayjs.prototype
   const U = proto.$utils()
-  const $isJalali = (v) => v.$C === 'jalali'
+  const $isJalali = v => v.$C === 'jalali'
   const $prettyUnit = U.prettyUnit || U.p
   const $isUndefined = U.isUndefined || U.u
   const $padStart = U.padStart || U.s
   const $monthDiff = U.monthDiff || U.m
   const $absFloor = U.absFloor || U.a
-  const wrapperOfTruth = (action) => function (...args) {
+  const wrapperOfTruth = action => function (...args) {
     const unsure = action.bind(this)(...args)
     unsure.$C = this.$C
     if (unsure.isJalali()) {
@@ -62,14 +63,16 @@ export default (o, Dayjs, dayjs) => {
     return $isJalali(this)
   }
 
-  dayjs.en.jmonths = 'Farvardin_Ordibehesht_Khordaad_Tir_Mordaad_Shahrivar_Mehr_Aabaan_Aazar_Dey_Bahman_Esfand'.split('_')
+  dayjs.en.jmonths = 'Farvardin_Ordibehesht_Khordaad_Tir_Mordaad_Shahrivar_Mehr_Aabaan_Aazar_Dey_Bahman_Esfand'.split(
+    '_',
+  )
   dayjs.locale('fa', { ...fa, ...C.fa }, true)
 
   const wrapper = function (date, instance) {
     return dayjs(date, {
       locale: instance.$L,
       utc: instance.$u,
-      calendar: instance.$C
+      calendar: instance.$C,
     })
   }
 
@@ -82,19 +85,23 @@ export default (o, Dayjs, dayjs) => {
   }
 
   proto.parse = function (cfg) {
-    let reg
     this.$C = cfg.calendar || this.$C || dayjs.$C
-    // eslint-disable-next-line no-cond-assign
-    if (cfg.jalali && (typeof cfg.date === 'string')
-      && (/.*[^Z]$/i.test(cfg.date)) // looking for a better way
-      && (reg = cfg.date.match(C.REGEX_PARSE))) {
+
+    if (
+      cfg.jalali
+      && typeof cfg.date === 'string'
+      && /.*[^Z]$/i.test(cfg.date) // looking for a better way
+    ) {
+      const reg = cfg.date.match(C.REGEX_PARSE)
+      if (reg) {
       // 1397-08-08 or 13970808
-      const [y, m, d] = jdate.G(
-        parseInt(reg[1], 10),
-        parseInt(reg[2], 10),
-        parseInt(reg[3] || 1, 10)
-      )
-      cfg.date = `${y}-${m}-${d}${reg[4] || ''}`
+        const [y, m, d] = jdate.G(
+          Number.parseInt(reg[1], 10),
+          Number.parseInt(reg[2], 10),
+          Number.parseInt(reg[3] || 1, 10),
+        )
+        cfg.date = `${y}-${m}-${d}${reg[4] || ''}`
+      }
     }
     return oldParse.bind(this)(cfg)
   }
@@ -121,17 +128,20 @@ export default (o, Dayjs, dayjs) => {
     const WModifier = (this.$W + (7 - dayjs.$fdow)) % 7
     switch (unit) {
       case C.Y:
-        return isStartOf ? instanceFactory(1, 0)
+        return isStartOf
+          ? instanceFactory(1, 0)
           : instanceFactory(0, 0, this.$jy + 1)
       case C.M:
-        return isStartOf ? instanceFactory(1, this.$jM)
+        return isStartOf
+          ? instanceFactory(1, this.$jM)
           : instanceFactory(
-            0,
-            (this.$jM + 1) % 12,
-            this.$jy + parseInt((this.$jM + 1) / 12, 10)
-          )
+              0,
+              (this.$jM + 1) % 12,
+              this.$jy + Math.floor((this.$jM + 1) / 12),
+            )
       case C.W:
-        return isStartOf ? instanceFactory(this.$jD - WModifier, this.$jM)
+        return isStartOf
+          ? instanceFactory(this.$jD - WModifier, this.$jM)
           : instanceFactory(this.$jD + (6 - WModifier), this.$jM)
       default:
         return oldStartOf.bind(this)(units, startOf)
@@ -172,26 +182,35 @@ export default (o, Dayjs, dayjs) => {
     if (!$isJalali(this)) {
       return oldAdd.bind(this)(number, units)
     }
-    number = Number(number) // eslint-disable-line no-param-reassign
+    number = Number(number)
     // units === 'ms' hard code here, will update in next release
-    const unit = (units && (units.length === 1 || units === 'ms')) ? units : $prettyUnit(units)
+    const unit = units && (units.length === 1 || units === 'ms')
+      ? units
+      : $prettyUnit(units)
     const instanceFactory = (u, n) => {
       const date = this.set(C.DATE, 1).set(u, n + number)
       return date.set(C.DATE, Math.min(this.$jD, date.daysInMonth()))
     }
-    if (['M', C.M].indexOf(unit) > -1) {
+    if (['M', C.M].includes(unit)) {
       const n = this.$jM + number
-      const y = n < 0 ? -Math.ceil(-n / 12) : parseInt(n / 12, 10)
+      const y = n < 0 ? -Math.ceil(-n / 12) : Math.floor(n / 12)
       const d = this.$jD
-      const x = this.set(C.D, 1).add(y, C.Y).set(C.M, n - (y * 12))
+      const x = this.set(C.D, 1)
+        .add(y, C.Y)
+        .set(C.M, n - y * 12)
       return x.set(C.D, Math.min(x.daysInMonth(), d))
     }
-    if (['y', C.Y].indexOf(unit) > -1) {
+    if (['y', C.Y].includes(unit)) {
       return instanceFactory(C.Y, this.$jy)
     }
-    if (['d', C.D].indexOf(unit) > -1) {
+    if (['d', C.D].includes(unit)) {
       const date = new Date(this.$d)
       date.setDate(date.getDate() + number)
+      return wrapper(date, this)
+    }
+    if (['w', C.W].includes(unit)) {
+      const date = new Date(this.$d)
+      date.setDate(date.getDate() + number * 7)
       return wrapper(date, this)
     }
 
@@ -206,7 +225,8 @@ export default (o, Dayjs, dayjs) => {
     const locale = localeObject || this.$locale()
     const { jmonths } = locale
     return str.replace(C.REGEX_FORMAT, (match) => {
-      if (match.indexOf('[') > -1) return match.replace(/\[|\]/g, '')
+      if (match.includes('['))
+        return match.replace(/\[|\]/g, '')
       switch (match) {
         case 'YY':
           return String(this.$jy).slice(-2)
@@ -250,7 +270,8 @@ export default (o, Dayjs, dayjs) => {
   }
 
   proto.$g = function (input, get, set) {
-    if ($isUndefined(input)) return this[get]
+    if ($isUndefined(input))
+      return this[get]
     return this.set(set, input)
   }
 
@@ -299,3 +320,5 @@ export default (o, Dayjs, dayjs) => {
     return wrapper(this.toDate(), this)
   }
 }
+
+export default plugin

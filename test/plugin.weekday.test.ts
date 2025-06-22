@@ -1,11 +1,12 @@
 import dayjs from 'dayjs'
 import weekday from 'dayjs/plugin/weekday'
-import jalali from '../src'
+import { expect, it } from 'vitest'
+import jalali from '../src/plugin'
 
 dayjs.extend(weekday)
 dayjs.extend(jalali)
 
-it('Should return correct weekday', () => {
+it('should return correct weekday', () => {
   // پنج‌شنبه ۱ اسفند ۱۳۹۸
   const date = dayjs('1398-12-01', { jalali: true }).locale('fa')
 
