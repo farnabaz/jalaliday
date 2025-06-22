@@ -1,6 +1,6 @@
 {
   "name": "jalaliday",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "packageManager": "pnpm@10.11.1",
   "description": "Persian (Jalali, Khorshidi) Plugin for Day.js",
   "author": "Ahad Birang",
