@@ -1,7 +1,7 @@
 {
   "name": "jalaliday",
   "version": "3.0.0",
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.12.1",
   "description": "Persian (Jalali, Khorshidi) Plugin for Day.js",
   "author": "Ahad Birang",
   "license": "MIT",
@@ -79,6 +79,6 @@
     "pre-commit": "^1.2.2",
     "release-it": "^19.0.3",
     "size-limit": "^11.2.0",
-    "vitest": "^3.2.2"
+    "vitest": "^3.2.4"
   }
 }
