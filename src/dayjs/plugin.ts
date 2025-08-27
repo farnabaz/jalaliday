@@ -1,6 +1,6 @@
 import type { PluginFunc } from 'dayjs'
 
-import fa from 'dayjs/locale/fa'
+import fa from 'dayjs/locale/fa.js'
 import jdate from '../calendar'
 import * as C from '../constant'
 
