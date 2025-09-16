@@ -23,6 +23,9 @@
     "./intl": "./dist/intl/index.mjs"
   },
   "main": "dist/index.mjs",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "vitest run",
     "lint": "eslint src/* test/*",
