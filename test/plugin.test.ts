@@ -32,6 +32,18 @@ it('setting calendar converts date', () => {
   expect(date2.$jD).toEqual(13)
 })
 
+it('setting calendar converts date ', () => {
+  const date = dayjs('1404/06/25', { jalali: true }).calendar('gregory')
+  expect(date.$y).toEqual(2025)
+  expect(date.$M).toEqual(8)
+  expect(date.$D).toEqual(16)
+
+  const date2 = dayjs('2025-09-16').calendar('jalali')
+  expect(date2.$jy).toEqual(1404)
+  expect(date2.$jM).toEqual(5)
+  expect(date2.$jD).toEqual(25)
+})
+
 it('keep instance calendar on manipulation', () => {
   const date = dayjs().calendar('jalali')
   expect(date.add(1, 'month').isJalali()).toEqual(true)
