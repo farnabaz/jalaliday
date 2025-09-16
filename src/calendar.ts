@@ -1,120 +1,126 @@
-/*
- JavaScript functions for the Fourmilab Calendar Converter
- by John Walker  --  September, MIM
- http://www.fourmilab.ch/documents/calendar/
- This program is in the public domain.
- */
+// https://github.com/jalaali/moment-jalaali
+// https://github.com/BaseMax/gregorian_to_jalali/blob/main/gregorian_to_jalali.js
 
-/*  MOD  --  Modulus function which works for non-integers.  */
-const $floor = Math.floor
+function g2d(gy, gm, gd) {
+  let d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4)
+    + div(153 * mod(gm + 9, 12) + 2, 5)
+    + gd - 34840408
+  d = d - div(div(gy + 100100 + div(gm - 8, 6), 100) * 3, 4) + 752
+  return d
+}
+const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178]
+const _floor = Math.floor
 function mod(a, b) {
-  return a - (b * $floor(a / b))
+  return a - ~~(a / b) * b
 }
-
-//  LEAP_GREGORIAN  --  Is a given year in the Gregorian calendar a leap year ?
-
-function lg(year) {
-  return ((year % 4) === 0)
-    && (!(((year % 100) === 0) && ((year % 400) !== 0)))
+function div(a, b) {
+  return ~~(a / b)
 }
+function jalCal(jy, withoutLeap) {
+  const bl = breaks.length
+  const gy = jy + 621
+  let leapJ = -14
+  let jp = breaks[0]
+  let jm
+  let jump
+  let leap
+  let n
 
-//  GREGORIAN_TO_JD  --  Determine Julian day number from Gregorian calendar date
+  if (jy < jp || jy >= breaks[bl - 1])
+    throw new Error(`Invalid Jalaali year ${jy}`)
 
-// GREGORIAN_EPOCH
-const GE = 1721425.5
-
-function g2j(year, month, day) {
-  return (GE - 1)
-    + (365 * (year - 1))
-    + $floor((year - 1) / 4)
-    + (-$floor((year - 1) / 100))
-    + $floor((year - 1) / 400)
-    + $floor((((367 * month) - 362) / 12)
-      + ((month <= 2)
-        ? 0
-        : (lg(year) ? -1 : -2)
-      )
-      + day)
-}
-
-//  JD_TO_GREGORIAN  --  Calculate Gregorian calendar date from Julian day
-
-function j2g(jd) {
-  const wjd = $floor(jd - 0.5) + 0.5
-  const depoch = wjd - GE
-  const quadricent = $floor(depoch / 146097)
-  const dqc = mod(depoch, 146097)
-
-  const cent = $floor(dqc / 36524)
-  const dcent = mod(dqc, 36524)
-  const quad = $floor(dcent / 1461)
-  const dquad = mod(dcent, 1461)
-  const yindex = $floor(dquad / 365)
-  let year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex
-  if (!((cent === 4) || (yindex === 4))) {
-    year++
+  // Find the limiting years for the Jalaali year jy.
+  for (let i = 1; i < bl; i += 1) {
+    jm = breaks[i]
+    jump = jm - jp
+    if (jy < jm)
+      break
+    leapJ = leapJ + div(jump, 33) * 8 + div(mod(jump, 33), 4)
+    jp = jm
   }
-  const yearday = wjd - g2j(year, 1, 1)
-  const leapadj = ((wjd < g2j(year, 3, 1))
-    ? 0
-    : (lg(year) ? 1 : 2)
-  )
-  const month = $floor((((yearday + leapadj) * 12) + 373) / 367)
-  const day = (wjd - g2j(year, month, 1)) + 1
+  n = jy - jp
 
-  return [year, month, day]
+  // Find the number of leap years from AD 621 to the beginning
+  // of the current Jalaali year in the Persian calendar.
+  leapJ = leapJ + div(n, 33) * 8 + div(mod(n, 33) + 3, 4)
+  if (mod(jump, 33) === 4 && jump - n === 4)
+    leapJ += 1
+
+  // And the same in the Gregorian calendar (until the year gy).
+  const leapG = div(gy, 4) - div((div(gy, 100) + 1) * 3, 4) - 150
+
+  // Determine the Gregorian date of Farvardin the 1st.
+  const march = 20 + leapJ - leapG
+
+  // return with gy and march when we don't need leap
+  if (withoutLeap)
+    return { gy, march }
+
+  // Find how many years have passed since the last leap year.
+  if (jump - n < 6)
+    n = n - jump + div(jump + 4, 33) * 33
+  leap = mod(mod(n + 1, 33) - 1, 4)
+  if (leap === -1) {
+    leap = 4
+  }
+
+  return { leap, gy, march }
+}
+function j2d(jy, jm, jd) {
+  const r = jalCal(jy, true)
+  return g2d(r.gy, 3, r.march) + (jm - 1) * 31 - div(jm, 7) * (jm - 7) + jd - 1
+}
+function d2g(jdn) {
+  let j = 4 * jdn + 139361631
+  j = j + div(div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908
+  const i = div(mod(j, 1461), 4) * 5 + 308
+  const gd = div(mod(i, 153), 5) + 1
+  const gm = mod(div(i, 153), 12) + 1
+  const gy = div(j, 1461) - 100100 + div(8 - gm, 6)
+  return [gy, gm, gd]
+}
+function toGregorian(jy, jm, jd) {
+  return d2g(j2d(jy, jm, jd))
 }
 
-// PERSIAN_EPOCH
-const PE = 1948320.5
+function toJalaali(year, month, day) {
+  const result = { year, month, day }
+  const array = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+  let days: number
 
-//  PERSIAN_TO_JD  --  Determine Julian day from Persian date
-
-function p2j(year, month, day) {
-  const epbase = year - ((year >= 0) ? 474 : 473)
-  const epyear = 474 + mod(epbase, 2820)
-
-  return day
-    + ((month <= 7)
-      ? ((month - 1) * 31)
-      : (((month - 1) * 30) + 6)
-    )
-    + $floor(((epyear * 682) - 110) / 2816)
-    + (epyear - 1) * 365
-    + $floor(epbase / 2820) * 1029983
-    + (PE - 1)
-}
-
-//  JD_TO_PERSIAN  --  Calculate Persian date from Julian day
-
-function j2p(jd) {
-  let year, ycycle, aux1, aux2
-
-  jd = $floor(jd) + 0.5
-
-  const depoch = jd - p2j(475, 1, 1)
-  const cycle = $floor(depoch / 1029983)
-  const cyear = mod(depoch, 1029983)
-  if (cyear === 1029982) {
-    ycycle = 2820
+  if (year <= 1600) {
+    year -= 621
+    result.year = 0
   }
   else {
-    aux1 = $floor(cyear / 366)
-    aux2 = mod(cyear, 366)
-    ycycle = $floor(((2134 * aux1) + (2816 * aux2) + 2815) / 1028522)
-      + aux1 + 1
+    year -= 1600
+    result.year = 979
   }
-  year = ycycle + (2820 * cycle) + 474
-  if (year <= 0) {
-    year--
+
+  const temp = (year > 2) ? (year + 1) : year
+  days = (_floor((temp + 3) / 4)) + (365 * year) - (_floor((temp + 99) / 100)) - 80 + array[month - 1] + (_floor((temp + 399) / 400)) + day
+  result.year += 33 * (_floor(days / 12053))
+  days %= 12053
+  result.year += 4 * (_floor(days / 1461))
+  days %= 1461
+
+  if (days > 365) {
+    result.year += _floor((days - 1) / 365)
+    days = (days - 1) % 365
   }
-  const yday = (jd - p2j(year, 1, 1)) + 1
-  const month = (yday <= 186) ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30)
-  const day = (jd - p2j(year, month, 1)) + 1
-  return [year, month, day]
+
+  result.month = (days < 186)
+    ? 1 + _floor(days / 31)
+    : 7 + _floor((days - 186) / 30)
+
+  result.day = 1 + ((days < 186)
+    ? (days % 31)
+    : ((days - 186) % 30))
+
+  return [result.year, result.month, result.day]
 }
 
 export default {
-  J: (y, m, d) => j2p(g2j(y, m, d)),
-  G: (y, m, d) => j2g(p2j(y, m, d)),
+  J: (y, m, d) => toJalaali(y, m, d),
+  G: (y, m, d) => toGregorian(y, m, d),
 }
