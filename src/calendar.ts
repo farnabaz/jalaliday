@@ -97,7 +97,7 @@ function toJalaali(year, month, day) {
     result.year = 979
   }
 
-  const temp = (year > 2) ? (year + 1) : year
+  const temp = (month > 2) ? (year + 1) : year
   days = (_floor((temp + 3) / 4)) + (365 * year) - (_floor((temp + 99) / 100)) - 80 + array[month - 1] + (_floor((temp + 399) / 400)) + day
   result.year += 33 * (_floor(days / 12053))
   days %= 12053
